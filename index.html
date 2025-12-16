@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chúc Mừng Sinh Nhật Tường</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    background:radial-gradient(circle,#ff9a9e,#fad0c4);
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+    transition:background 1s;
+}
+.card{
+    position:relative;
+    z-index:10;
+    background:white;
+    width:360px;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    margin:auto;
+    top:18%;
+    animation:zoomIn 1.5s ease;
+}
+h1{color:#ff4081}
+h2{color:#333}
+
+button{
+    margin-top:15px;
+    padding:12px 22px;
+    border:none;
+    border-radius:25px;
+    background:#ff4081;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 5px 15px rgba(0,0,0,.25);
+}
+
+.message{
+    margin-top:15px;
+    min-height:90px;
+    color:#555;
+}
+.final-text{
+    margin-top:10px;
+    font-size:18px;
+    font-weight:bold;
+    color:#ff4081;
+    display:none;
+}
+
+/* Ảnh rơi */
+.fall-img{
+    position:absolute;
+    top:-150px;
+    width:90px;
+    border-radius:15px;
+    animation:fall linear infinite;
+}
+
+/* Icon */
+.icon{
+    position:absolute;
+    top:-50px;
+    font-size:28px;
+    animation:fall linear infinite;
+    user-select:none;
+    cursor:pointer;
+}
+
+/* Tim nổ */
+.heart-pop{
+    position:absolute;
+    font-size:20px;
+    animation:pop 1s forwards;
+}
+
+/* Pháo hoa */
+.firework{
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    animation:explode 1.2s ease-out forwards;
+}
+
+/* Animation */
+@keyframes fall{
+    to{transform:translateY(120vh) rotate(360deg);}
+}
+@keyframes explode{
+    from{transform:scale(1);opacity:1}
+    to{transform:scale(25);opacity:0}
+}
+@keyframes zoomIn{
+    from{transform:scale(0)}
+    to{transform:scale(1)}
+}
+@keyframes pop{
+    from{transform:scale(1);opacity:1}
+    to{transform:scale(2);opacity:0;top:-30px}
+}
+
+/* MOBILE */
+@media (max-width:600px){
+    .card{
+        width:90%;
+        padding:20px;
+        top:12%;
+    }
+    h1{font-size:24px}
+    h2{font-size:20px}
+    button{
+        width:100%;
+        font-size:15px;
+    }
+    .fall-img{
+        width:70px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NHẠC -->
+<audio id="music" loop>
+  <source src="happy.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+    <h1>🎂 Chúc Mừng Sinh Nhật 🎂</h1>
+    <h2>Tường 💖</h2>
+
+    <button id="mainBtn" onclick="handleClick()">
+        🎁 Mở lời chúc & bật nhạc
+    </button>
+
+    <div class="message" id="message"></div>
+    <div class="final-text" id="finalText">🎉 Happy Birthday Tường 🎉</div>
+</div>
+
+<!-- Ảnh rơi -->
+<img src="img1.jpg" class="fall-img" style="left:5%;animation-duration:8s">
+<img src="img2.jpg" class="fall-img" style="left:30%;animation-duration:10s">
+<img src="img3.jpg" class="fall-img" style="left:55%;animation-duration:9s">
+<img src="img4.jpg" class="fall-img" style="left:75%;animation-duration:11s">
+<img src="img5.jpg" class="fall-img" style="left:80%;animation-duration:12s">
+<img src="img6.jpg" class="fall-img" style="left:90%;animation-duration:17s">
+
+<script>
+const text=
+"Chúc Tường tuổi mới thật nhiều niềm vui 🎉\n"+
+"Luôn cười thật tươi 😆\n"+
+"Học giỏi hơn nè 📚\n"+
+"Và gặp thật nhiều điều tốt đẹp 💕";
+
+let i=0, started=false, musicOn=false;
+let bgInterval=null;
+
+/* đổi nền */
+function startBackground(){
+    if(bgInterval) return;
+    bgInterval=setInterval(()=>{
+        document.body.style.background=
+        `radial-gradient(circle,
+        hsl(${Math.random()*360},90%,75%),
+        hsl(${Math.random()*360},90%,85%))`;
+    },1200);
+}
+function stopBackground(){
+    clearInterval(bgInterval);
+    bgInterval=null;
+}
+
+/* NÚT DUY NHẤT */
+function handleClick(){
+    const music=document.getElementById("music");
+    const btn=document.getElementById("mainBtn");
+
+    if(!musicOn){
+        music.play().catch(()=>{});
+        btn.innerText="🔇 Tắt nhạc";
+        musicOn=true;
+        startBackground();
+    }else{
+        music.pause();
+        btn.innerText="🔊 Bật nhạc";
+        musicOn=false;
+        stopBackground();
+        return;
+    }
+
+    if(started) return;
+    started=true;
+
+    const box=document.getElementById("message");
+    const end=document.getElementById("finalText");
+    box.innerHTML="";
+    i=0;
+
+    const t=setInterval(()=>{
+        if(i<text.length){
+            box.innerHTML+=text[i]=="\n"?"<br>":text[i];
+            i++;
+        }else{
+            clearInterval(t);
+            end.style.display="block";
+        }
+    },50);
+}
+
+/* PHÁO HOA */
+setInterval(()=>{
+    for(let k=0;k<4;k++){
+        const f=document.createElement("div");
+        f.className="firework";
+        f.style.left=Math.random()*innerWidth+"px";
+        f.style.top=Math.random()*innerHeight+"px";
+        f.style.background=`hsl(${Math.random()*360},100%,60%)`;
+        document.body.appendChild(f);
+        setTimeout(()=>f.remove(),1200);
+    }
+},180);
+
+/* ICON RƠI */
+const icons=["❤️","🎉","🎂","✨","⭐","💖"];
+setInterval(()=>{
+    const ic=document.createElement("div");
+    ic.className="icon";
+    ic.innerText=icons[Math.floor(Math.random()*icons.length)];
+    ic.style.left=Math.random()*100+"%";
+    ic.style.animationDuration=(5+Math.random()*5)+"s";
+
+    ic.onclick=(e)=>{
+        for(let j=0;j<5;j++){
+            const h=document.createElement("div");
+            h.className="heart-pop";
+            h.innerText="❤️";
+            h.style.left=e.pageX+"px";
+            h.style.top=e.pageY+"px";
+            document.body.appendChild(h);
+            setTimeout(()=>h.remove(),1000);
+        }
+    };
+
+    document.body.appendChild(ic);
+    setTimeout(()=>ic.remove(),10000);
+},400);
+</script>
+
+</body>
+</html>
